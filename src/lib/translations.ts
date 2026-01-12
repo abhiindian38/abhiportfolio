@@ -24,17 +24,17 @@ export const translations = {
       title: "About Me",
       tags: {
         location: "India",
-        webDev: "Java & Python",
-        webDesign: "DSA Specialist",
-        uxUi: "CS Student",
+        webDev: "Web developer",
+        webDesign: "Software Engineer",
+        uxUi: "ML Enthusiast",
       },
       description:
-        "I am a tech enthusiast and passionate programmer specializing in Computer Science, with strong expertise in Java and Python. I continuously explore and learn new algorithms, tools, and technologies, applying them to real-world problem solving. With a solid foundation in data structures, system design, and core computer science concepts, I have built multiple projects from scratch and successfully solved over 300+ DSA problems across various competitive coding platforms. I am driven by curiosity, consistency, and a desire to build impactful, scalable solutions.",
+        "I am a tech enthusiast and passionate programmer specializing in Computer Science, with strong expertise in Java and Python. I continuously explore and learn new algorithms, tools, and technologies, applying them to real-world problem solving. With a solid foundation in data structures, system design, and core computer science concepts, I have built multiple projects from scratch and successfully solved over multiple DSA problems across various competitive coding platforms. I am driven by curiosity, consistency, and a desire to build impactful, scalable solutions.",
       education: {
         title: "Education",
         btech: {
-          location: "Marri Laxman Reddy Institute of Technology and Management, Hyderabad",
-          degree: "Bachelor of Technology in Computer Science",
+          location: "MLR Institute of Technology and Management, Hyderabad",
+          degree: "Bachelor of Technology in Computer Science & IT",
           date: "2021 – 2025",
           cgpa: "CGPA: 8.00 / 10.00",
         },
@@ -51,7 +51,7 @@ export const translations = {
           gpa: "GPA: 9.70 / 10.0",
         },
       },
-      viewCV: "View my CV",
+      viewCV: "View my CV/Resume",
       cvLink: "#",
     },
     projects: {

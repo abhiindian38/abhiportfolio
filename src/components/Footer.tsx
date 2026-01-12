@@ -1,272 +1,238 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { motion, useReducedMotion, AnimatePresence, type Variants } from "framer-motion";
 import { useLanguage } from "@/lib/useLanguage";
+import { 
+  Github, 
+  Linkedin, 
+  Twitter, 
+  ArrowUp, 
+  Home, 
+  User, 
+  Layers, 
+  Mail, 
+  Copy, 
+  Check,
+  MessageCircle
+} from "lucide-react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+// Utility for cleaner tailwind classes
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export default function Footer() {
   const { t } = useLanguage();
-  const [pathname, setPathname] = useState("");
+  const reduce = useReducedMotion();
+  const [copied, setCopied] = useState(false);
+  const email = "your.email@example.com"; // Replace with your actual email
+
+  // Time Logic
+  const [now, setNow] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setPathname(window.location.pathname);
+    setMounted(true);
+    const updateTime = () => {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const timeString = new Intl.DateTimeFormat("en-US", {
+          timeZone: tz,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).format(new Date());
+        setNow(timeString);
+      } catch {
+        setNow(new Date().toLocaleTimeString());
+      }
+    };
+    updateTime();
+    const id = setInterval(updateTime, 1000);
+    return () => clearInterval(id);
   }, []);
 
-  const isLegalPage = pathname !== "/";
+  const year = useMemo(() => new Date().getFullYear(), []);
+
+  // Handle Copy Email
+  const handleCopy = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const navLinks = [
+    { label: t.nav.home, href: "/", icon: Home },
+    { label: t.nav.about, href: `/#${t.sections.about}`, icon: User },
+    { label: t.nav.projects, href: `/#${t.sections.projects}`, icon: Layers },
+    { label: t.nav.contact, href: `/#${t.sections.contact}`, icon: Mail },
+  ];
+
+  // Small wrapper to render the provided WhatsApp SVG from /public
+  const WhatsAppIcon = ({ className }: { className?: string }) => (
+    // using the public path so Vite serves it at runtime
+    <img src="/whatsapp-glyph-black-logo-svgrepo-com.svg" alt="WhatsApp" className={cn("w-5 h-5 filter dark:invert", className)} />
+  );
+
+  const socialLinks = [
+    { label: "GitHub", href: "https://github.com/abhiindian38", icon: Github },
+    { label: "LinkedIn", href: "https://linkedin.com/in/abhishek", icon: Linkedin },
+    { label: "WhatsApp", href: "https://wa.me/917093398106", icon: WhatsAppIcon },
+    { label: "X (Twitter)", href: "https://x.com/whyabhishekh", icon: Twitter },
+  ];
+
+  // Animation Variants
+  const containerVars: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVars: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+      },
+    },
+  };
+
+  if (!mounted) return null;
 
   return (
-    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-750">
-      <div className="max-w-7xl mx-auto px-6 sm:px-6 py-10 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
-          <div>
-            <h3 className="text-[2rem] font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-              Abhishek
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 md:pr-5">
-              {t.footer.description}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-              {t.footer.navigation}
-            </h3>
-            <ul className="space-y-2">
-              {isLegalPage ? (
-                <>
-                  <li>
-                    <a
-                      href="/"
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.home}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`/#${t.sections.about}`}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.about}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`/#${t.sections.projects}`}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.projects}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`/#${t.sections.contact}`}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.contact}
-                    </a>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.home}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`#${t.sections.about}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document
-                          .querySelector(`#${t.sections.about}`)
-                          ?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.about}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`#${t.sections.projects}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document
-                          .querySelector(`#${t.sections.projects}`)
-                          ?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.projects}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`#${t.sections.contact}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document
-                          .querySelector(`#${t.sections.contact}`)
-                          ?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                      {t.nav.contact}
-                    </a>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-              {t.footer.contact.title}
-            </h3>
-
-            <div className="mb-3 sm:mb-4">
-              <a
-                href="mailto:abhiindian38@gmail.com"
-                className="flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                abhiindian38@gmail.com
-              </a>
-            </div>
-
-            <div className="mb-3 sm:mb-4">
-              <div className="flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Hyderabad, India
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                {t.footer.contact.follow}
-              </p>
-              <div className="flex gap-3">
-                <a
-                  href="https://linkedin.com/in/abhishek"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-6 h-6 flex items-center justify-center text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-300"
-                  aria-label="LinkedIn"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://github.com/abhiindian38"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-6 h-6 flex items-center justify-center text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-300"
-                  aria-label="GitHub"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-                <a
-                  href="https://wa.me/917093398106"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-6 h-6 flex items-center justify-center text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-300"
-                  aria-label="WhatsApp"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 448 512"
-                    aria-hidden="true"
-                  >
-                    <path d="M380.9 97.1C339.4 55.6 283.8 32 224 32S108.6 55.6 67.1 97.1 32 183.8 32 243.8c0 43.9 12.4 86.4 36 122.9L32 480l117.6-30.9c35.7 19.3 76.4 29.5 117.4 29.5 59.8 0 115.4-23.6 156.9-65.1S416 303.8 416 243.8c0-59.8-23.6-115.4-65.1-156.9zM224 448c-39.6 0-77.3-10.8-110.8-31.6l-7.4-4.4-76.9 20.2 20.6-75.7-4.6-7.3c-21.3-33.6-32.5-72.4-32.5-112.5C64 183.8 87.6 128.2 129.1 86.7S224 64 224 64s115.4 23.6 156.9 65.1S416 243.8 416 243.8c0 41.5-16.2 80.3-45.6 109.7-29.4 29.4-68.2 45.6-109.7 45.6zM344 288c-4.4-2.2-26.1-12.9-30.1-14.4-4-1.5-6.9-2.2-9.8 2.2-2.9 4.4-11.3 14.4-13.8 17.3-2.5 2.9-5 3.3-9.3 1.1-4.4-2.2-18.5-6.8-35.4-21.9-13.1-11.4-21.9-25.6-24.4-30-2.5-4.4-.3-6.8 1.9-9.1 2.2-2.2 4.9-5.7 7.3-8.5 2.5-2.9 3.3-5 4.9-8.5 1.5-3.6.8-6.8-.4-9.1-1.1-2.2-9.8-23.6-13.4-32.3-3.6-8.7-7.3-7.5-9.8-7.5-2.5 0-5.4-.4-8.5-.4-3.1 0-8.1 1.1-12.4 5.5-4.4 4.4-16.9 16.5-16.9 40.2 0 23.7 17.3 46.6 19.8 49.5 2.5 2.9 33.9 51.7 82.3 72.3 48.4 20.6 48.4 13.8 57.1 12.9 8.7-.9 26.1-10.6 29.7-20.9 3.6-10.3 3.6-19.3 2.5-20.9-1.1-1.5-4-2.2-8.4-4.4z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://x.com/whyabhishekh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-6 h-6 flex items-center justify-center text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-300"
-                  aria-label="X (Twitter)"
-                >
-                  <svg
-                    className="w-[1.2rem] h-[1.2rem]"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.814L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-200 dark:border-gray-750 mb-6"></div>
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-center md:text-left">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            © {new Date().getFullYear()} Abhishek. {t.footer.rights}
-          </p>
-          <div className="flex items-center gap-2 text-sm">
-            <a
-              href="/mentions-legales"
-              className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              {t.footer.legal}
-            </a>
-            <span className="text-gray-700 dark:text-gray-300">•</span>
-            <a
-              href="/politique-confidentialite"
-              className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              {t.footer.privacy}
-            </a>
-          </div>
-        </div>
+    <footer className="relative w-full bg-zinc-50 dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 overflow-hidden">
+      {/* Premium Gradient Background Blur */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px]" />
       </div>
+
+      <motion.div 
+        variants={containerVars}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="relative max-w-7xl mx-auto px-6 py-16 md:px-12"
+      >
+        {/* Top Section: CTA & Copy Email */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 mb-16 border-b border-zinc-200 dark:border-zinc-800 pb-12">
+          <motion.div variants={itemVars} className="max-w-2xl">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+              Let's create something <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+                extraordinary.
+              </span>
+            </h2>
+            <div className="flex items-center gap-4 group">
+              <button 
+                onClick={handleCopy}
+                className="relative overflow-hidden flex items-center gap-3 px-6 py-3 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <AnimatePresence mode="wait">
+                  {copied ? (
+                    <motion.span
+                      key="check"
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.5, opacity: 0 }}
+                    >
+                      <Check className="w-5 h-5" />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="copy"
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.5, opacity: 0 }}
+                    >
+                      <Copy className="w-5 h-5" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <span>{copied ? "Email Copied" : "Copy Email"}</span>
+              </button>
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Available for work</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Navigation Links - Stacked for premium look */}
+          <motion.nav variants={itemVars} className="grid grid-cols-2 gap-x-12 gap-y-4">
+            {navLinks.map((link) => (
+              <a 
+                key={link.href}
+                href={link.href}
+                className="group flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              >
+                <link.icon className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                <span className="text-lg font-medium tracking-tight -translate-x-6 group-hover:translate-x-0 transition-transform duration-300">
+                  {link.label}
+                </span>
+              </a>
+            ))}
+          </motion.nav>
+        </div>
+
+        {/* Bottom Section: Info & Socials */}
+        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-6">
+          
+          {/* Copyright & Time */}
+          <motion.div variants={itemVars} className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-sm text-zinc-500 dark:text-zinc-400 font-mono">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+              <span>{now}</span>
+            </div>
+            <div className="hidden md:block w-px h-4 bg-zinc-300 dark:bg-zinc-800" />
+            <div>
+              © {year} Abhishek. {t.footer.rights}
+            </div>
+          </motion.div>
+
+          {/* Socials & Scroll Top */}
+          <motion.div variants={itemVars} className="flex items-center gap-4">
+            <div className="flex items-center gap-2 p-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-full text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-all duration-300 group relative"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {social.label}
+                  </span>
+                </a>
+              ))}
+            </div>
+
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="p-3 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors"
+              aria-label="Scroll to top"
+            >
+              <ArrowUp className="w-5 h-5" />
+            </button>
+          </motion.div>
+        </div>
+      </motion.div>
     </footer>
   );
 }

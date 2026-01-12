@@ -12,8 +12,8 @@ interface ExperienceProps {
 
 const experiences: ExperienceProps[] = [
     {
-        company: "Private Service-Based Company",
-        role: "Full Stack Programmer",
+        company: "Global IT Services Company",
+        role: "Programmer Analyst Trainee",
         duration: "October 2025 – Present",
         description: "Currently contributing as a full stack programmer, building scalable and production-ready applications. Involved across the development lifecycle, working with modern frontend and backend technologies to deliver reliable systems.",
         highlights: [
@@ -24,7 +24,7 @@ const experiences: ExperienceProps[] = [
     },
     {
         company: "Marvel Medi Revolutions",
-        role: "Junior Tech Marketing Engineer",
+        role: "Jr Tech Marketing Engineer",
         duration: "December 2024 – March 2025",
         description: "Worked in a fast-paced health-tech environment supporting digital marketing operations with technical insights. Contributed to improving the technical visibility and operational efficiency of health-based warehouse products.",
         highlights: [
