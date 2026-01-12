@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import LazyBeams from "./components/LazyBeams";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
+import Certifications from "./components/Certifications";
 import { useLanguage } from "@/lib/useLanguage";
 import Experience from "./components/Experience";
 
@@ -541,6 +542,8 @@ export default function App() {
       </section>
 
       <Skills />
+
+      <Certifications />
 
       <Experience />
 
