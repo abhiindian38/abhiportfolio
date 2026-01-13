@@ -5,17 +5,16 @@ import { ExternalLink, Github, MonitorOff } from "lucide-react";
 const projects = [
     {
         title: "Suno 2025",
-        // Placeholder image logic - since actual image might be missing, using a gradient or generic pattern if not found
-        image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=2808&auto=format&fit=crop", // Futuristic/Music vibe
+        image: "/projects/suno-2025.png", // Custom futuristic interface
         description: "A high-fidelity, futuristic cinematic discovery platform for Indian films and music, designed as an immersive intelligence interface.",
         tech: ["React 18", "Vite", "Tailwind", "Framer Motion", "TMDB API"],
         demo: "https://suno-2025.vercel.app",
-        code: "https://github.com/yourusername/suno-2025",
+        code: "https://github.com/abhiindian38/Suno-2025",
         available: true
     },
     {
         title: "Facial Emotion Detection",
-        image: "https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=2000&auto=format&fit=crop", // AI/Tech vibe
+        image: "/projects/facial-emotion.png", //  Custom research viz
         description: "Real-time facial expression recognition system using live video streams and CNN for emotion classification.",
         tech: ["Python", "TensorFlow", "OpenCV", "Flask", "CNN"],
         demo: "#",
@@ -44,24 +43,29 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
             className="group relative flex flex-col bg-white dark:bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-2xl dark:hover:shadow-primary/10 transition-all duration-300"
         >
             {/* Image Container */}
-            <div className="relative h-48 overflow-hidden">
+            <div className="relative h-56 overflow-hidden">
                 <div className="absolute inset-0 bg-gray-900/10 dark:bg-black/20 z-10 group-hover:bg-transparent transition-colors duration-500" />
+
+                {/* Noise Overlays */}
+                <div className="absolute inset-0 opacity-20 dark:opacity-30 mix-blend-overlay z-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat"></div>
+
                 <motion.img
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.5 }}
+                    whileHover={{ scale: 1.05, filter: "brightness(1.1)" }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transform will-change-transform"
                 />
 
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 z-10" />
+                {/* Cinematic Vignette & Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-500 z-10" />
+                <div className="absolute inset-0 bg-radial-gradient from-transparent to-black/40 opacity-100 z-10" />
 
                 {/* Floating Title (Mobile/Card Design) - Embedded at bottom left of image for futuristic look */}
-                <div className="absolute bottom-4 left-5 z-20">
-                    <h3 className="text-xl font-bold text-white tracking-tight">
+                <div className="absolute bottom-5 left-6 z-20">
+                    <h3 className="text-2xl font-bold text-white tracking-tight drop-shadow-lg">
                         {project.title}
-                        <span className="block h-[3px] w-0 bg-primary mt-1 group-hover:w-full transition-all duration-300 ease-out" />
+                        <span className="block h-[3px] w-0 bg-primary mt-2 group-hover:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
                     </h3>
                 </div>
             </div>
