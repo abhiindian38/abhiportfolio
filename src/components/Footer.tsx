@@ -78,7 +78,7 @@ export default function Footer() {
 
   const socialLinks = [
     { label: "GitHub", href: "https://github.com/abhiindian38", icon: Github },
-    { label: "LinkedIn", href: "https://linkedin.com/in/abhishek", icon: Linkedin },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/abhishek-gupta-686a962a3/", icon: Linkedin },
     { label: "WhatsApp", href: "https://wa.me/917093398106", icon: WhatsAppIcon },
     { label: "X (Twitter)", href: "https://x.com/whyabhishekh", icon: Twitter },
   ];

@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 import {
-    Code2,
-    Database,
     Terminal,
-    Globe,
-    Layout,
-    Server,
-    Figma,
 } from "lucide-react";
 
 // Skill Data Mapping
@@ -15,30 +9,27 @@ const skills = [
     { name: "Java", icon: "/java-wordmark.svg", type: "image" },
     { name: "Python", icon: "/python.svg", type: "image" },
     { name: "PHP", icon: "/php.svg", type: "image" },
-    { name: "C++", icon: Code2, type: "lucide" },
+    { name: "C++", icon: encodeURI('/C++ (CPlusPlus).svg'), type: "image" },
     { name: "JavaScript", icon: "/javascript-svgrepo-com.svg", type: "image" },
-    { name: "TypeScript", icon: "/file-type-vscode.svg", type: "image" },
+    { name: "TypeScript", icon: encodeURI('/TypeScript.svg'), type: "image" },
     // --- Frontend ---
     { name: "React", icon: "/react.svg", type: "image" },
     { name: "HTML5", icon: "/html-5.svg", type: "image" },
     { name: "CSS3", icon: "/css3.svg", type: "image" },
-    { name: "Tailwind", icon: Layout, type: "lucide" },
+    { name: "Tailwind", icon: encodeURI('/Tailwind CSS.svg'), type: "image" },
     { name: "Vite", icon: "/vitejs.svg", type: "image" },
-    { name: "Three.js", icon: Globe, type: "lucide" },
-    { name: "Chart.js", icon: "/react.svg", type: "image", isGeneric: true },
     // --- Backend ---
     { name: "Spring", icon: "/spring.svg", type: "image" },
     { name: "Spring Boot", icon: "/springboot.svg", type: "image" },
-    { name: "Hibernate", icon: Database, type: "lucide" },
-    { name: "MySQL", icon: Database, type: "lucide" },
-    { name: "JDBC", icon: Server, type: "lucide" },
-    // --- Tools/DevOps ---
+    { name: "Hibernate", icon: encodeURI('/Hibernate.svg'), type: "image" },
+    { name: "MySQL", icon: encodeURI('/MySQL.svg'), type: "image" },
+    // --- Tools/DevOps & Others ---
     { name: "Git", icon: "/git.svg", type: "image" },
-    { name: "GitHub", icon: "/github-stroke-16.svg", type: "image" },
+    { name: "GitHub", icon: encodeURI('/GitHub.svg'), type: "image", invertOnDark: true },
     { name: "Linux", icon: Terminal, type: "lucide" },
     { name: "Jira", icon: "/jira.svg", type: "image" },
     { name: "Scrum", icon: "/scrum-svgrepo-com.svg", type: "image" },
-    { name: "Figma", icon: Figma, type: "lucide" },
+    { name: "After Effects", icon: encodeURI('/After Effects.svg'), type: "image" },
 ];
 
 const SkillTile = ({ skill, index }: { skill: typeof skills[0], index: number }) => {
@@ -89,11 +80,17 @@ const SkillTile = ({ skill, index }: { skill: typeof skills[0], index: number })
                 {/* Icon */}
                 <div className="relative z-10 p-2">
                     {skill.type === "image" ? (
-                        <img
-                            src={skill.icon as string}
-                            alt={skill.name}
-                            className="w-6 h-6 sm:w-8 sm:h-8 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                        />
+                        (() => {
+                            const base = "w-6 h-6 sm:w-8 sm:h-8 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300";
+                            const extra = (skill as any).invertOnDark ? " dark:invert" : "";
+                            return (
+                                <img
+                                    src={skill.icon as string}
+                                    alt={skill.name}
+                                    className={base + extra}
+                                />
+                            );
+                        })()
                     ) : (
                         <skill.icon
                             className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 group-hover:text-primary transition-colors duration-300"

@@ -133,7 +133,7 @@ export default function App() {
             </svg>
           </a>
           <a
-            href="https://linkedin.com/in/abhishek"
+            href="https://www.linkedin.com/in/abhishek-gupta-686a962a3/"
             target="_blank"
             rel="noopener noreferrer"
             className="w-6 h-6 flex items-center justify-center text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-300"
@@ -505,7 +505,7 @@ export default function App() {
 
               <div className="flex justify-center lg:justify-start">
                 <a
-                  href={t.about.cvLink}
+                  href={encodeURI('/abhi 7093 resume.pdf')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-[#191919] dark:bg-white text-white dark:text-[#191919] rounded-lg text-base font-semibold hover:opacity-80 transition-opacity duration-300"
@@ -590,7 +590,7 @@ export default function App() {
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   <a
-                    href="https://linkedin.com/in/abhishek"
+                    href="https://www.linkedin.com/in/abhishek-gupta-686a962a3/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A66C2] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
